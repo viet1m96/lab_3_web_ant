@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+    <title>Лаб 3 по Вебу</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <h:outputStylesheet name="styles/common.css"/>
+    <h:outputStylesheet name="styles/header.css"/>
+    <h:outputStylesheet name="styles/clock.css"/>
+    <h:outputStylesheet name="styles/main.css"/>
+</h:head>
+
+<h:body>
+    <header>
+        <div>
+            <div class="hover-card">
+                <div class="card-container">
+                    <i id="author-symbol" class="fa-solid fa-user-circle"> </i>
+                    <span id="author-name"> HOANG THE VIET </span>
+                    <div class="card-data">
+                            <span class="card-description">
+                                <strong>Hoang The Viet</strong> from <strong>P3232</strong> with variant <strong>415129</strong>
+                            </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="home-and-date">
+            <div class="social-icons">
+                <h:link outcome="index" pt:data-tip="Back to home" pt:aria-label="Back to home" pt:target="self">
+                    <i class="fa-solid fa-house"> </i>
+                    <span class="sr-only">Back to home</span>
+                </h:link>
+            </div>
+            <div>
+                <div class="date-wrapper">
+                    <span id="dow11"> </span>
+                    <span id="day11"> </span>
+                    <span id="mon11"> </span>
+                    <span id="year11"> </span>
+                </div>
+                <div class="clock-wrapper">
+                    <div class="countdown">
+                        <div class="time-section" id="hours">
+                            <div class="time-group">
+                                <div class="time-segment">
+                                    <div class="segment-display">
+                                        <div class="segment-display__top"> </div>
+                                        <div class="segment-display__bottom"> </div>
+                                        <div class="segment-overlay">
+                                            <div class="segment-overlay__top"> </div>
+                                            <div class="segment-overlay__bottom"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="time-segment">
+                                    <div class="segment-display">
+                                        <div class="segment-display__top"> </div>
+                                        <div class="segment-display__bottom"> </div>
+                                        <div class="segment-overlay">
+                                            <div class="segment-overlay__top"> </div>
+                                            <div class="segment-overlay__bottom"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Hours</p>
+                        </div>
+
+                        <div class="time-section" id="minutes">
+                            <div class="time-group">
+                                <div class="time-segment">
+                                    <div class="segment-display">
+                                        <div class="segment-display__top"> </div>
+                                        <div class="segment-display__bottom"> </div>
+                                        <div class="segment-overlay">
+                                            <div class="segment-overlay__top"> </div>
+                                            <div class="segment-overlay__bottom"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="time-segment">
+                                    <div class="segment-display">
+                                        <div class="segment-display__top"> </div>
+                                        <div class="segment-display__bottom"> </div>
+                                        <div class="segment-overlay">
+                                            <div class="segment-overlay__top"> </div>
+                                            <div class="segment-overlay__bottom"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Minutes</p>
+                        </div>
+
+                        <div class="time-section" id="seconds">
+                            <div class="time-group">
+                                <div class="time-segment">
+                                    <div class="segment-display">
+                                        <div class="segment-display__top"> </div>
+                                        <div class="segment-display__bottom"> </div>
+                                        <div class="segment-overlay">
+                                            <div class="segment-overlay__top"> </div>
+                                            <div class="segment-overlay__bottom"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="time-segment">
+                                    <div class="segment-display">
+                                        <div class="segment-display__top"> </div>
+                                        <div class="segment-display__bottom"> </div>
+                                        <div class="segment-overlay">
+                                            <div class="segment-overlay__top"> </div>
+                                            <div class="segment-overlay__bottom"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Seconds</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </header>
+</h:body>
+<h:outputScript name="scripts/FlipClock.js"/>
+<h:outputScript name="scripts/FlipDate.js"/>
+</html>
