@@ -29,21 +29,17 @@
             </div>
 
         </div>
-        <div class="home-and-date">
-            <div class="social-icons">
-                <h:link outcome="index" pt:data-tip="Back to home" pt:aria-label="Back to home" pt:target="self">
-                    <i class="fa-solid fa-house"> </i>
-                    <span class="sr-only">Back to home</span>
-                </h:link>
-            </div>
-            <div>
-                <div class="date-wrapper">
+        <div id="result-overlay" aria-live="polite">
+            <span id="result-overlay-text"> </span>
+        </div>
+        <div>
+            <div class="date-wrapper">
                     <span id="dow11"> </span>
                     <span id="day11"> </span>
                     <span id="mon11"> </span>
                     <span id="year11"> </span>
                 </div>
-                <div class="clock-wrapper">
+            <div class="clock-wrapper">
                     <div class="countdown">
                         <div class="time-section" id="hours">
                             <div class="time-group">
@@ -124,13 +120,63 @@
                         </div>
                     </div>
                 </div>
+        </div>
+    </header>
+
+    <div class="working-container">
+        <div class="left-panel">
+            <div class="top-panel">
+                <div class="label-area">
+                    Enter the parameters:
+                </div>
+
+            </div>
+
+            <div class="bottom-panel">
+                <div class="label-area">
+                    Results
+                </div>
+
+                <table id="final-results" class="inner-table">
+                    <tr>
+                        <th> Hit </th>
+                        <th> X </th>
+                        <th> Y </th>
+                        <th> R </th>
+                        <th> Calculation time </th>
+                        <th> Release time </th>
+                    </tr>
+                </table>
+
             </div>
         </div>
 
+        <div class="right-panel">
+            <div class="label-area">
+                Illustration Graph
+            </div>
+            <canvas id="graph"> </canvas>
+            <div class="big-log">
+                <div class="coordinate-log">
+                    <label>Current X: </label>
+                    <p id="screen-log-x"> </p>
+                </div>
+                <div class="coordinate-log">
+                    <label>Current Y: </label>
+                    <p id="screen-log-y"> </p>
+                </div>
+            </div>
+        </div>
 
+    </div>
 
-    </header>
+    <div id="back-to-home-wrapper">
+        <h:link outcome="index" target="self" styleClass="link" value="← Back to home"/>
+    </div>
 </h:body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"/>
 <h:outputScript name="scripts/FlipClock.js"/>
 <h:outputScript name="scripts/FlipDate.js"/>
+<h:outputScript name="scripts/DrawingPoints.js"/>
+<h:outputScript name="scripts/DrawingGraph.js"/>
 </html>

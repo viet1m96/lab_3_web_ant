@@ -35,3 +35,18 @@ header {
     align-items: center;
     z-index: 100;
 }
+
+.link{
+    color:#fff;
+    display:inline-block;
+    transform-origin:center;
+    transition: transform .25s ease, text-shadow .25s ease;
+    text-decoration: underline;
+}
+.link:hover{
+    transform: scale(1.08);
+    text-shadow:
+            0 0 6px  rgba(71, 61, 139, 0.85),
+            0 0 14px rgba(136, 129, 179, 0.60),
+            0 0 28px rgba(200, 197, 220, 0.40);
+}

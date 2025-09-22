@@ -1,10 +1,10 @@
 (function () {
     "use strict";
+
     var SECONDS_BASE = 11;
 
     var DOW = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    var MON = ["January","February","March","April","May","June",
-        "July","August","September","October","November","December"];
+    var MON = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
     function $(id) { return document.getElementById(id); }
     function ensureNode(id, parentId, tag) {
@@ -19,51 +19,28 @@
     }
 
     var containerId = "date11";
+    ensureNode(containerId, null, "div");
     var elDow  = ensureNode("dow11",  containerId, "span");
     var elDay  = ensureNode("day11",  containerId, "span");
     var elMon  = ensureNode("mon11",  containerId, "span");
     var elYear = ensureNode("year11", containerId, "span");
 
-
-    var now = new Date();
-    var dateObj = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var hh = now.getHours();
-    var mm = now.getMinutes();
-    var s11 = now.getSeconds() % SECONDS_BASE;
-
-    function pad2(n) { return (n < 10 ? "0" + n : "" + n); }
+    var dateObj = new Date();
 
     function renderDate() {
-        elDow.textContent  = DOW[ dateObj.getDay() ];
-        elDay.textContent  = pad2( dateObj.getDate() );
-        elMon.textContent  = MON[ dateObj.getMonth() ];
-        elYear.textContent = dateObj.getFullYear();
+        elDow.textContent  = DOW[dateObj.getDay()] + ", ";
+        elDay.textContent  = String(dateObj.getDate()).padStart(2, "0") + " ";
+        elMon.textContent  = MON[dateObj.getMonth()] + " ";
+        elYear.textContent = String(dateObj.getFullYear());
     }
 
     renderDate();
-    var timer = setInterval(function () {
-        s11++;
-        if (s11 >= SECONDS_BASE) {
-            s11 = 0;
-            mm++;
-            if (mm >= 60) {
-                mm = 0;
-                hh++;
-                if (hh >= 24) {
-                    hh = 0;
-                    dateObj.setDate(dateObj.getDate() + 1);
-                    renderDate();
-                }
-            }
-        }
-    }, 1000);
 
-    var obs = new MutationObserver(function () {
-        var container = $(containerId);
-        if (!container || !document.body.contains(container)) {
-            clearInterval(timer);
-            obs.disconnect();
+    document.addEventListener('tick11', function (e) {
+        var d = e.detail || {};
+        if (d.h === 0 && d.m === 0 && d.s11 === 0) {
+            dateObj.setDate(dateObj.getDate() + 1);
+            renderDate();
         }
     });
-    obs.observe(document.body, { childList: true, subtree: true });
 })();
