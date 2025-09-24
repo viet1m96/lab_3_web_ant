@@ -26,16 +26,16 @@ let RDraw;
 function drawTriangle () {
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(RArea,0);
-    ctx.lineTo(0, -RArea / 2);
+    ctx.lineTo(-RArea / 2,0);
+    ctx.lineTo(0, RArea);
     ctx.closePath();
     ctx.fill();
 }
-function drawSquare ()   { ctx.fillRect(0, 0, -RArea / 2, RArea); }
+function drawSquare ()   { ctx.fillRect(0, 0, -RArea, -RArea / 2); }
 function drawCircle () {
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, RArea, Math.PI / 2, 0, true);
+    ctx.arc(0, 0, RArea, -Math.PI / 2, 0, false);
     ctx.closePath();
     ctx.fill();
 }

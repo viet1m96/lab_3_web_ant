@@ -66,7 +66,6 @@ function updateTimeSection(sectionID, timeValue) {
         emitTick();
     }, 1000);
 })();
-// ===== FlipClock.js — IIFE với DEV hooks để test nhanh =====
 // (function () {
 //     "use strict";
 //

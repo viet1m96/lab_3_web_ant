@@ -51,13 +51,13 @@ function isHit(x, y) {
 }
 
 function checkSquare(x, y) {
-    return x <= 0 && y >= 0 && x >= -realR / 2 && y <= realR;
+    return x <= 0 && y <= 0 && x >= -realR && y >= -realR / 2;
 }
 
 function checkCircle(x, y) {
-    return x >= 0 && y >= 0 && (x * x + y * y <= realR * realR);
+    return x >= 0 && y <= 0 && (x * x + y * y <= realR * realR);
 }
 
 function checkTriangle(x, y) {
-    return x >= 0 && y <= 0 && ((x - 2 * y) <= realR);
+    return x <= 0 && y >= 0 && ((y - 2 * x) <= realR);
 }

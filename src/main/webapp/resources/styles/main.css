@@ -24,6 +24,7 @@
 .top-panel {
     height: 49%;
     margin-bottom: 1%;
+    overflow: scroll;
 }
 .bottom-panel {
     height: 50%;
@@ -125,3 +126,63 @@
     margin-top: 1%;
     margin-bottom: 1.2rem;
 }
+
+.input-zone {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid black;
+}
+
+.labels {
+    margin-left: 2%;
+}
+.radio-x-group, .radio-r-group {
+    display: flex;
+}
+.radio-x-group .ui-radiobutton {
+    margin: 0 0.2rem 0.2rem;
+}
+
+.radio-x-group .ui-radiobutton .ui-radiobutton-box {
+    width: 2rem;
+    height: 2rem;
+}
+.radio-x-group .ui-g {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-right: 5rem;
+}
+
+.radio-r-group .ui-radiobutton {
+    margin: 0 0.55rem 0.2rem;
+}
+.radio-r-group .ui-radiobutton .ui-radiobutton-box {
+    width: 2rem;
+    height: 2rem;
+}
+.radio-r-group .ui-g {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-right: 13rem;
+}
+.input-and-condition {
+    display: block;
+}
+.input-zone .ui-inputfield {
+    width: 250px;
+    border: 2px solid #ced4da;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    margin-right: 8rem;
+    font-size: 15px;
+}
+
