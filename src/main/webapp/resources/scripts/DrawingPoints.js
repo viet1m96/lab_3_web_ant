@@ -1,30 +1,22 @@
 let hitPoints = [];
 let missedPoints = [];
 
-
 function distinguishPoints() {
+    let arr = window.pointsXY;
     hitPoints = [];
     missedPoints = [];
-    const rows = document.querySelectorAll('#final-results tr');
-    rows.forEach((tr, i) =>
-    {
-        if(i < 1) return;
-        const tds = tr.querySelectorAll('td');
-        const xText = tds[1].textContent.trim();
-        const yText = tds[2].textContent.trim();
-        const x = parseFloat(xText);
-        const y = parseFloat(yText);
-        if(tds[0].textContent.trim() === 'false' || tds[0].textContent.trim() === 'true') {
-            if(isHit(x, y)) {
-                hitPoints.push({x, y});
-            } else {
-                missedPoints.push({x, y});
-            }
+    for(let i = 0; i < arr.length; i++) {
+        if(isHit(arr[i].x, arr[i].y)) {
+            hitPoints.push(arr[i]);
+        } else {
+            missedPoints.push(arr[i]);
         }
-    });
+    }
 }
 
+
 function drawPointsOperation() {
+    if(typeof window.pointsXY === 'undefined') return;
     distinguishPoints();
     drawPointsWithColor(hitPoints, 'green');
     drawPointsWithColor(missedPoints, 'red');

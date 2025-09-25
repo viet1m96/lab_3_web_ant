@@ -8,5 +8,13 @@
         v = v.replace(/(\..*)\./g, '$1');
         v = v.replace(/^(-?)\./, '$1');
         if(v !== before) el.value = v;
+
+        const tmp = el.value.trim();
+
+        if (/^3\.0*[1-9]\d*$/.test(tmp) || /^-5\.0*[1-9]\d*$/.test(tmp)) {
+            el.value = '';
+        }
     }, true);
 })();
+
+

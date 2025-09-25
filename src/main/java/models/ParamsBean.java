@@ -20,4 +20,5 @@ public class ParamsBean implements Serializable {
     private BigDecimal x;
     private BigDecimal y;
     private BigDecimal R;
+
 }

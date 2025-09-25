@@ -186,3 +186,15 @@
     font-size: 15px;
 }
 
+.button-container {
+    display: block;
+    padding-left: 36.5rem;
+    padding-top: 3%;
+}
+
+.button-container .ui-button {
+    font-size: 2rem;
+    width: 10rem;
+    color: black;
+}
+

@@ -132,7 +132,7 @@
                 <div class="label-area">
                     Enter the parameters:
                 </div>
-                <h:form>
+                <h:form id="form">
                     <div class="input-zone">
                         <label class="labels"> Coordinate X: </label>
                         <p:selectOneRadio id="x" value="#{paramsBean.x}" layout="responsive" styleClass="radio-x-group" required="true" requiredMessage="Please pick one of these values!" >
@@ -144,6 +144,7 @@
                             <f:selectItem itemLabel="2" itemValue="2"/>
                             <f:selectItem itemLabel="3" itemValue="3"/>
                         </p:selectOneRadio>
+                        <p:message for="x"/>
                     </div>
                     <div class="input-zone">
                         <label class="labels"> Coordinate Y: </label>
@@ -154,7 +155,7 @@
                                          required="true"
                                          requiredMessage="Please pick one of these values!"
                                          pt:data-js-hook="num-only">
-                                <f:validateLongRange minimum="-5" maximum="3"/>
+                                <f:validateDoubleRange minimum="-5" maximum="3"/>
                             </p:inputText>
                             <p class="condition"> Y must be in range: [-5, 3] </p>
                             <p:message for="y"/>
@@ -175,6 +176,19 @@
                             <f:selectItem itemLabel="2.5"  itemValue="2.5"/>
                             <f:selectItem itemLabel="3" itemValue="3"/>
                         </p:selectOneRadio>
+                        <p:message for="R"/>
+                    </div>
+
+                    <div class="button-container">
+                        <p:commandButton id="submit"
+                                         value="Submit"
+                                         ajax="true"
+                                         widgetVar="submitter"
+                                         action="#{listBean.submit}"
+                                         update="form msgs final-results"
+                                         process="@form"
+                                         oncomplete="loadPointsFromJson(args.pointsJson);
+                                                     showResultOverlay(args.hit);"/>
                     </div>
                 </h:form>
             </div>
@@ -184,16 +198,24 @@
                     Results
                 </div>
 
-                <table id="final-results" class="inner-table">
-                    <tr>
-                        <th> Hit </th>
-                        <th> X </th>
-                        <th> Y </th>
-                        <th> R </th>
-                        <th> Calculation time </th>
-                        <th> Release time </th>
-                    </tr>
-                </table>
+                 <p:dataTable id="final-results"
+                              value="#{listBean.model}"
+                              var="p"
+                              lazy="true"
+                              paginator="true"
+                              rows="5">
+                     <p:column headerText="Hit">#{p.hit}</p:column>
+                     <p:column headerText="x">#{p.x}</p:column>
+                     <p:column headerText="y">#{p.y}</p:column>
+                     <p:column headerText="R">#{p.r}</p:column>
+                     <p:column headerText="Calculation Time">#{p.calTime}</p:column>
+                     <p:column headerText="Released">
+                         <h:outputText value="#{p.releaseTime}">
+                             <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm:ss"/>
+                         </h:outputText>
+                     </p:column>
+                 </p:dataTable>
+
 
             </div>
         </div>
@@ -220,6 +242,36 @@
     <div id="back-to-home-wrapper">
         <h:link outcome="index" target="self" styleClass="link" value="← Back to home"/>
     </div>
+    <script>
+        window.updateXY = function(curX, curY) {
+            var form = document.getElementById('form');
+            var radios = form &amp;&amp; form.querySelectorAll('input[type="radio"][name$=":x"]');
+            var targetVal = String(curX);
+            var matched = false;
+
+            if (radios &amp;&amp; radios.length) {
+                radios.forEach(function (r) {
+                    if (r.value === targetVal) {
+                        if (!r.checked) {
+                            r.checked = true;
+                        }
+                        matched = true;
+                    } else if (r.checked) {
+                        r.checked = false;
+                    }
+                });
+            }
+            var yEl = form &amp;&amp; form.querySelector('input[id$=":y"]');
+            if (yEl) {
+                yEl.value = String(curY);
+            }
+
+            if (window.PF) {
+                var btn = PF('submitter');
+                if (btn &amp;&amp; btn.jq) { btn.jq.click(); }
+            }
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"/>
     <h:outputScript name="scripts/FlipClock.js"/>
     <h:outputScript name="scripts/FlipDate.js"/>

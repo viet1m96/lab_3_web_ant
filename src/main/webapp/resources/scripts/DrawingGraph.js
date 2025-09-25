@@ -255,24 +255,21 @@ canvas.addEventListener('dblclick', e => {
             confirmButtonText: "Close"
         });
     } else {
-        // const curCoords = curCoordinatesInLogicWorld(e);
-        // const curX = curCoords.curX;
-        // const curY = curCoords.curY;
-        //
-        // if(curX >= -5 && curX <= 5) checkX = true;
-        // if(yList.includes(curY)) checkY = true;
-        // if(checkX && checkY) {
-        //     inputX.value = curX;
-        //     ySelect.value = String(Number(curY));
-        //     form.requestSubmit();
-        // } else {
-        //     Swal.fire({
-        //         title: "Illegal coordinates",
-        //         html: `You picked point (${curX}, ${curY}) <br> Please read the conditions on your left to pick again!`,
-        //         icon: "error",
-        //         confirmButtonText: "Close"
-        //     });
-        // }
+        const curCoords = curCoordinatesInLogicWorld(e);
+        const curX = curCoords.curX;
+        const curY = curCoords.curY;
+        let checkX = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0].includes(curX);
+        let checkY =  (curY >= -5 && curY <= 3);
+        if(checkX && checkY) {
+            window.updateXY(curX, curY);
+        } else {
+            Swal.fire({
+                title: "Illegal coordinates",
+                html: `You picked point (${curX}, ${curY}) <br> Please read the conditions on your left to pick again!`,
+                icon: "error",
+                confirmButtonText: "Close"
+            });
+        }
     }
 });
 canvas.addEventListener('wheel', onWheel, { passive: false });

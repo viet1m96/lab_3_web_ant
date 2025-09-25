@@ -31,8 +31,12 @@ dependencies {
     implementation 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
     implementation 'jakarta.persistence:jakarta.persistence-api:3.2.0'
 
+    implementation 'org.eclipse.persistence:eclipselink:4.0.6'
+    compileOnly("jakarta.platform:jakarta.jakartaee-api:10.0.0")
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation("com.fasterxml.jackson.core:jackson-core:2.20.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
 }
 
 test {
