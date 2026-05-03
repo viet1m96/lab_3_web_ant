@@ -26,12 +26,12 @@ let RDraw;
 function drawTriangle () {
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(-RArea / 2,0);
+    ctx.lineTo(-RArea,0);
     ctx.lineTo(0, RArea);
     ctx.closePath();
     ctx.fill();
 }
-function drawSquare ()   { ctx.fillRect(0, 0, -RArea, -RArea / 2); }
+function drawSquare ()   { ctx.fillRect(0, 0, -RArea, -RArea); }
 function drawCircle () {
     ctx.beginPath();
     ctx.moveTo(0, 0);
@@ -258,18 +258,7 @@ canvas.addEventListener('dblclick', e => {
         const curCoords = curCoordinatesInLogicWorld(e);
         const curX = curCoords.curX;
         const curY = curCoords.curY;
-        let checkX = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0].includes(curX);
-        let checkY =  (curY >= -5 && curY <= 3);
-        if(checkX && checkY) {
-            window.updateXY(curX, curY);
-        } else {
-            Swal.fire({
-                title: "Illegal coordinates",
-                html: `You picked point (${curX}, ${curY}) <br> Please read the conditions on your left to pick again!`,
-                icon: "error",
-                confirmButtonText: "Close"
-            });
-        }
+        window.submitGraphPoint(curX, curY);
     }
 });
 canvas.addEventListener('wheel', onWheel, { passive: false });

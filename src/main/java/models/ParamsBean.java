@@ -1,6 +1,8 @@
 package models;
 
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
 import jakarta.inject.Named;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,3 +24,4 @@ public class ParamsBean implements Serializable {
     private BigDecimal R;
 
 }
+

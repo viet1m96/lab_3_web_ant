@@ -28,6 +28,8 @@ public class PointDBServices {
         return em.createQuery(DELETE_DATA_BY_SESSION)
                 .setParameter("sid", sessionId)
                 .executeUpdate();
+
+
     }
 
     public long countBySession(String sessionId) {

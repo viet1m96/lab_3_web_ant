@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="lab3-web" default="build" basedir=".">
+
+    <property file="build.properties"/>
+
+    <path id="compile.classpath">
+        <fileset dir="${lib.dir}" erroronmissingdir="false">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="test.classpath">
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${test.classes.dir}"/>
+
+        <fileset dir="${lib.dir}" erroronmissingdir="false">
+            <include name="**/*.jar"/>
+        </fileset>
+
+        <fileset dir="${test.lib.dir}" erroronmissingdir="false">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${test.classes.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${reports.dir}"/>
+        <mkdir dir="${doc.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${reports.dir}"/>
+        <delete dir="${doc.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               includeantruntime="false"
+               encoding="UTF-8"
+               release="17">
+            <classpath refid="compile.classpath"/>
+        </javac>
+
+        <copy todir="${classes.dir}">
+            <fileset dir="${resources.dir}" erroronmissingdir="false"/>
+        </copy>
+    </target>
+
+    <target name="compile-tests" depends="build">
+        <javac srcdir="${test.src.dir}"
+               destdir="${test.classes.dir}"
+               includeantruntime="false"
+               encoding="UTF-8"
+               release="17">
+            <classpath refid="test.classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile-tests">
+        <mkdir dir="${reports.dir}/test"/>
+
+        <junitlauncher haltOnFailure="true" printSummary="true">
+            <classpath refid="test.classpath"/>
+
+            <testclasses outputdir="${reports.dir}/test">
+                <fileset dir="${test.classes.dir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+
+                <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="build" depends="compile">
+        <jar destfile="${jar.file}" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Implementation-Title" value="${project.name}"/>
+                <attribute name="Implementation-Version" value="${project.version}"/>
+            </manifest>
+        </jar>
+
+        <war destfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml">
+            <fileset dir="${web.dir}"/>
+            <classes dir="${classes.dir}"/>
+            <lib dir="${lib.dir}"/>
+        </war>
+    </target>
+    
+    <target name="doc" depends="build">
+        <delete dir = "${doc.dir}"/>
+        <delete dir = "${checksums.dir}"/>
+        <mkdir dir = "${doc.dir}"/>
+        <mkdir dir = "${checksums.dir}"/>
+
+        <javadoc sourcepath="${src.dir}"
+                 destdir="${doc.dir}"
+                 encoding="UTF-8"
+                 charset="UTF-8"
+                 author="true"
+                 version="true"
+                 use="true"
+                 source="17"
+                 windowtitle="${project.name} API"
+                 >
+            <classpath refid="compile.classpath" />
+        </javadoc>
+
+        <patternset id="project.files.patterns">
+            <include name="src/**/*.java"/>
+            <include name="src/main/resources/**"/>
+            <include name="src/main/webapp/**"/>
+            <include name="build.xml"/>
+            <include name="build.properties"/>
+
+            <exclude name="**/.git/**"/>
+            <exclude name="**/.gradle/**"/>
+            <exclude name="build/**"/>
+            <exclude name="build-ant/**"/>
+            <exclude name="dist/**"/>
+            <exclude name="reports/**"/>
+            <exclude name="docs/**"/>
+            <exclude name="out/**"/>
+        </patternset>
+
+        <checksum algorithm="MD5"
+          todir="${checksums.dir}"
+          fileext=".md5"
+          forceoverwrite="true"
+          totalproperty="project.files.md5">
+            <fileset dir=".">
+                <patternset refid="project.files.patterns"/>
+            </fileset>
+        </checksum>
+
+        <checksum algorithm="SHA-1"
+                todir="${checksums.dir}"
+                fileext=".sha1"
+                forceoverwrite="true"
+                totalproperty="project.files.sha1">
+            <fileset dir=".">
+                <patternset refid="project.files.patterns"/>
+            </fileset>
+        </checksum>
+
+        <manifest file="${manifest.file}">
+            <attribute name="Manifest-Version" value="1.0"/>
+            <attribute name="Implementation-Title" value="${project.name}"/>
+            <attribute name="Implementation-Version" value="${project.version}"/>
+            <attribute name="${project.files.md5.name}" value="${project.files.md5}"/>
+            <attribute name="${project.files.sha1.name}" value="${project.files.sha1}"/>
+        </manifest>
+
+    
+        <jar destfile="${jar.file}"
+            update="true"
+            manifest="${manifest.file}">
+            <zipfileset dir="${doc.dir}" prefix="javadoc"/>
+            <zipfileset dir="${checksums.dir}" prefix="checksums"/>
+        </jar>
+    </target>
+    <target name="xml">
+        <xmlvalidate failonerror="true" lenient="true">
+            <fileset dir="src">
+                <include name="**/*.xml"/>
+            </fileset>
+        </xmlvalidate>
+    </target>
+
+    <target name="native2ascii" depends="init">
+        <delete dir="${localization.build.dir}"/>
+        <mkdir dir="${localization.build.dir}"/>
+
+        <native2ascii src="${localization.src.dir}"
+                    dest="${localization.build.dir}"
+                    encoding="UTF-8"
+                    includes="**/*.properties"/>
+    </target>
+
+    <target name="music" depends="build">
+        <exec executable="aplay" failonerror="false">
+            <arg value="${music.file}"/>
+        </exec>
+    </target>
+
+
+    <target name="diff" depends="init">
+        <exec executable="bash" output="${diff.report.file}" failonerror="false">
+            <arg value="-c"/>
+            <arg value="git status --short &amp;&amp; echo '--- DIFF STAT ---' &amp;&amp; git diff --stat"/>
+        </exec>
+
+        <echo message="Diff report saved to ${diff.report.file}"/>
+    </target>
+
+
+    <target name="report" depends="test">
+        <echo message="Tests passed. Adding JUnit XML report to SVN..."/>
+
+        <exec executable="svn" failonerror="true">
+            <arg value="add"/>
+            <arg value="--force"/>
+            <arg value="--parents"/>
+            <arg value="${junit.report.dir}"/>
+        </exec>
+
+        <exec executable="svn" failonerror="true">
+            <arg value="commit"/>
+            <arg value="${reports.dir}"/>
+            <arg value="-m"/>
+            <arg value="${report.commit.message}"/>
+        </exec>
+
+        <echo message="JUnit XML report committed to SVN."/>
+    </target>
+
+    <target name="scp" depends="build">
+        <echo message="Creating remote directory ${scp.remote.dir} on ${scp.host}"/>
+
+        <exec executable="ssh" failonerror="true">
+            <arg value="-i"/>
+            <arg value="${scp.key}"/>
+            <arg value="-p"/>
+            <arg value="${scp.port}"/>
+            <arg value="${scp.user}@${scp.host}"/>
+            <arg value="mkdir -p ${scp.remote.dir}"/>
+        </exec>
+
+        <echo message="Copying ${scp.file} to ${scp.user}@${scp.host}:${scp.remote.dir}"/>
+
+        <exec executable="scp" failonerror="true">
+            <arg value="-i"/>
+            <arg value="${scp.key}"/>
+            <arg value="-P"/>
+            <arg value="${scp.port}"/>
+            <arg value="-o"/>
+            <arg value="IdentitiesOnly=yes"/>
+            <arg value="${scp.file}"/>
+            <arg value="${scp.user}@${scp.host}:${scp.remote.dir}/"/>
+        </exec>
+    </target>
+
+
+    <target name="alt" depends="init">
+        <echo message="Creating alternative version of the project..."/>
+
+        
+        <delete dir="${alt.work.dir}"/>
+        <delete dir="${alt.build.dir}"/>
+
+        <copy todir="${alt.src.root}">
+            <fileset dir="src"/>
+        </copy>
+
+        
+        <replace dir="${alt.src.dir}"
+                token="${alt.old.class.name}"
+                value="${alt.new.class.name}">
+            <include name="**/*.java"/>
+        </replace>
+
+
+        <replaceregexp byline="true">
+            <regexp pattern="\b${alt.old.variable.name}\b"/>
+            <substitution expression="${alt.new.variable.name}"/>
+            <fileset dir="${alt.src.dir}">
+                <include name="**/*.java"/>
+            </fileset>
+        </replaceregexp>
+
+
+        <move file="${alt.src.dir}/${alt.class.package.dir}/${alt.old.class.name}.java"
+            tofile="${alt.src.dir}/${alt.class.package.dir}/${alt.new.class.name}.java"/>
+
+        
+        <antcall target="build">
+            <param name="src.dir" value="${alt.src.dir}"/>
+            <param name="resources.dir" value="${alt.resources.dir}"/>
+            <param name="web.dir" value="${alt.web.dir}"/>
+            <param name="build.dir" value="${alt.build.dir}"/>
+            <param name="classes.dir" value="${alt.classes.dir}"/>
+            <param name="jar.file" value="${alt.jar.file}"/>
+            <param name="war.file" value="${alt.war.file}"/>
+        </antcall>
+
+        <echo message="Alternative jar created: ${alt.jar.file}"/>
+    </target>
+
+
+    <target name="env" depends="build">
+        <echo message="Running project in alternative environment..."/>
+        <echo message="Java home: ${env.java.home}"/>
+        <echo message="JVM args: ${env.jvm.args}"/>
+        <echo message="Server home: ${server.home}"/>
+
+        <mkdir dir="${server.deploy.dir}"/>
+
+        
+        <copy file="${war.file}"
+            tofile="${server.deployed.war}"
+            overwrite="true"/>
+
+        <exec executable="bash" failonerror="true">
+            <arg value="-c"/>
+            <arg value="JAVA_HOME='${env.java.home}' JAVA_OPTS='${env.jvm.args}' nohup '${server.home}/bin/standalone.sh' > '${server.log.file}' 2&gt;&amp;1 &amp; echo $! > '${server.pid.file}'"/>
+        </exec>
+
+        <sleep seconds="8"/>
+
+        <echo message="Server started."/>
+        <echo message="Open: ${server.url}"/>
+        <echo message="Log: ${server.log.file}"/>
+        <echo message="PID file: ${server.pid.file}"/>
+    </target>
+
+    <target name="env-stop">
+        <exec executable="${server.home}/bin/jboss-cli.sh" failonerror="false">
+            <arg value="--connect"/>
+            <arg value="command=:shutdown"/>
+        </exec>
+
+        <delete file="${server.pid.file}"/>
+        <echo message="WildFly shutdown requested."/>
+    </target>
+
+    <target name="team" depends="init">
+        <echo message="Preparing team build from previous SVN revisions..."/>
+
+        <!-- Current SVN revision -->
+        <exec executable="bash" outputproperty="team.current.revision" failonerror="true">
+            <arg value="-c"/>
+            <arg value="svn info --show-item revision"/>
+        </exec>
+
+        <!-- Current SVN URL -->
+        <exec executable="bash" outputproperty="team.svn.url" failonerror="true">
+            <arg value="-c"/>
+            <arg value="svn info --show-item url"/>
+        </exec>
+
+        <!-- Previous revision: current - 1 -->
+        <exec executable="bash" outputproperty="team.revision.1" failonerror="true">
+            <arg value="-c"/>
+            <arg value="echo $(($(svn info --show-item revision) - 1))"/>
+        </exec>
+
+        <!-- Previous revision: current - 2 -->
+        <exec executable="bash" outputproperty="team.revision.2" failonerror="true">
+            <arg value="-c"/>
+            <arg value="echo $(($(svn info --show-item revision) - 2))"/>
+        </exec>
+
+        <echo message="Current revision: ${team.current.revision}"/>
+        <echo message="Previous revision 1: ${team.revision.1}"/>
+        <echo message="Previous revision 2: ${team.revision.2}"/>
+        <echo message="SVN URL: ${team.svn.url}"/>
+
+        <delete dir="${team.work.dir}"/>
+        <mkdir dir="${team.work.dir}"/>
+
+       
+        <exec executable="svn" failonerror="true">
+            <arg value="export"/>
+            <arg value="-r"/>
+            <arg value="${team.revision.1}"/>
+            <arg value="${team.svn.url}"/>
+            <arg value="${team.work.dir}/rev-${team.revision.1}"/>
+        </exec>
+
+        
+        <exec executable="svn" failonerror="true">
+            <arg value="export"/>
+            <arg value="-r"/>
+            <arg value="${team.revision.2}"/>
+            <arg value="${team.svn.url}"/>
+            <arg value="${team.work.dir}/rev-${team.revision.2}"/>
+        </exec>
+
+        
+        <ant antfile="build.xml"
+            dir="${team.work.dir}/rev-${team.revision.1}"
+            target="build"
+            inheritAll="false"/>
+
+       
+        <ant antfile="build.xml"
+            dir="${team.work.dir}/rev-${team.revision.2}"
+            target="build"
+            inheritAll="false"/>
+
+        
+        <zip destfile="${team.zip.file}">
+            <zipfileset file="${team.work.dir}/rev-${team.revision.1}/dist/${team.jar.name}"
+                        fullpath="rev-${team.revision.1}-${team.jar.name}"/>
+
+            <zipfileset file="${team.work.dir}/rev-${team.revision.2}/dist/${team.jar.name}"
+                        fullpath="rev-${team.revision.2}-${team.jar.name}"/>
+        </zip>
+
+        <echo message="Team archive created: ${team.zip.file}"/>
+    </target>
+
+    <target name="history" depends="init">
+        <echo message="Searching Git history for last compilable revision..."/>
+
+        <exec executable="bash" failonerror="true">
+            <arg value="${history.script.file}"/>
+            <arg value="${history.git.root}"/>
+            <arg value="${basedir}/${history.work.dir}"/>
+            <arg value="${basedir}/${history.report.file}"/>
+            <arg value="${basedir}/${history.log.file}"/>
+        </exec>
+
+        <echo message="History report: ${history.report.file}"/>
+        <echo message="History log: ${history.log.file}"/>
+    </target>
+
+
+</project>

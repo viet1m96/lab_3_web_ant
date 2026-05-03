@@ -198,3 +198,15 @@
     color: black;
 }
 
+.input-feedback {
+    font-size: 0.8em;
+    transition: color 0.2s;
+}
+.input-feedback.valid {
+    color: green;
+}
+
+.input-feedback.invalid {
+    color: red;
+}
+
