@@ -12,6 +12,15 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+/**
+ * Session-scoped bean that stores point parameters submitted by the user.
+ * <p>
+ * The bean is exposed to JSF pages under the name {@code paramsBean}. Lombok
+ * generates the constructors, getters, and setters used by JSF and tests.
+ *
+ * @author viet1m96
+ * @version 1.0
+ */
 @Named("paramsBean")
 @SessionScoped
 @Getter
@@ -19,9 +28,18 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParamsBean implements Serializable {
+    /**
+     * Selected x-coordinate.
+     */
     private BigDecimal x;
+
+    /**
+     * Selected y-coordinate.
+     */
     private BigDecimal y;
+
+    /**
+     * Selected radius value.
+     */
     private BigDecimal R;
-
 }
-
