@@ -193,9 +193,13 @@
 
 
     <target name="diff" depends="init">
-        <exec executable="bash" output="${diff.report.file}" failonerror="false">
-            <arg value="-c"/>
-            <arg value="git status --short &amp;&amp; echo '--- DIFF STAT ---' &amp;&amp; git diff --stat"/>
+        <exec executable="bash" failonerror="true">
+            <arg value="${diff.script.file}"/>
+            <arg value="${diff.source.root}"/>
+            <arg value="${diff.protected.classes}"/>
+            <arg value="${diff.commit.paths}"/>
+            <arg value="${diff.commit.message}"/>
+            <arg value="${diff.report.file}"/>
         </exec>
 
         <echo message="Diff report saved to ${diff.report.file}"/>
@@ -334,25 +338,25 @@
     <target name="team" depends="init">
         <echo message="Preparing team build from previous SVN revisions..."/>
 
-        <!-- Current SVN revision -->
+        
         <exec executable="bash" outputproperty="team.current.revision" failonerror="true">
             <arg value="-c"/>
             <arg value="svn info --show-item revision"/>
         </exec>
 
-        <!-- Current SVN URL -->
+        
         <exec executable="bash" outputproperty="team.svn.url" failonerror="true">
             <arg value="-c"/>
             <arg value="svn info --show-item url"/>
         </exec>
 
-        <!-- Previous revision: current - 1 -->
+        
         <exec executable="bash" outputproperty="team.revision.1" failonerror="true">
             <arg value="-c"/>
             <arg value="echo $(($(svn info --show-item revision) - 1))"/>
         </exec>
 
-        <!-- Previous revision: current - 2 -->
+        
         <exec executable="bash" outputproperty="team.revision.2" failonerror="true">
             <arg value="-c"/>
             <arg value="echo $(($(svn info --show-item revision) - 2))"/>
